@@ -14,7 +14,268 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      assessments: {
+        Row: {
+          assessment_type: string
+          career_suggestions: string[] | null
+          completed_at: string
+          counselor_interpretation_notes: string | null
+          created_at: string
+          id: string
+          results_json: Json | null
+          score: number | null
+          user_id: string
+        }
+        Insert: {
+          assessment_type: string
+          career_suggestions?: string[] | null
+          completed_at?: string
+          counselor_interpretation_notes?: string | null
+          created_at?: string
+          id?: string
+          results_json?: Json | null
+          score?: number | null
+          user_id: string
+        }
+        Update: {
+          assessment_type?: string
+          career_suggestions?: string[] | null
+          completed_at?: string
+          counselor_interpretation_notes?: string | null
+          created_at?: string
+          id?: string
+          results_json?: Json | null
+          score?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      counselors: {
+        Row: {
+          availability_json: Json | null
+          bio: string | null
+          created_at: string
+          experience_years: number | null
+          id: string
+          is_active: boolean | null
+          name: string
+          photo_url: string | null
+          rate_per_session: number | null
+          specializations: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          availability_json?: Json | null
+          bio?: string | null
+          created_at?: string
+          experience_years?: number | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          photo_url?: string | null
+          rate_per_session?: number | null
+          specializations?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          availability_json?: Json | null
+          bio?: string | null
+          created_at?: string
+          experience_years?: number | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          photo_url?: string | null
+          rate_per_session?: number | null
+          specializations?: string[] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          id: string
+          is_read: boolean | null
+          message: string
+          recipient_id: string
+          sender_id: string
+          sent_at: string
+          session_id: string | null
+        }
+        Insert: {
+          id?: string
+          is_read?: boolean | null
+          message: string
+          recipient_id: string
+          sender_id: string
+          sent_at?: string
+          session_id?: string | null
+        }
+        Update: {
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          recipient_id?: string
+          sender_id?: string
+          sent_at?: string
+          session_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          date_of_birth: string | null
+          education_level: string | null
+          email: string
+          id: string
+          name: string
+          parent_guardian_name: string | null
+          parent_guardian_phone: string | null
+          phone: string | null
+          preferred_language: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date_of_birth?: string | null
+          education_level?: string | null
+          email: string
+          id?: string
+          name: string
+          parent_guardian_name?: string | null
+          parent_guardian_phone?: string | null
+          phone?: string | null
+          preferred_language?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date_of_birth?: string | null
+          education_level?: string | null
+          email?: string
+          id?: string
+          name?: string
+          parent_guardian_name?: string | null
+          parent_guardian_phone?: string | null
+          phone?: string | null
+          preferred_language?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      service_types: {
+        Row: {
+          description: string | null
+          duration_minutes: number | null
+          id: string
+          is_active: boolean | null
+          name: string
+          price: number | null
+        }
+        Insert: {
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          price?: number | null
+        }
+        Update: {
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          price?: number | null
+        }
+        Relationships: []
+      }
+      sessions: {
+        Row: {
+          booked_at: string
+          counselor_id: string
+          counselor_notes: string | null
+          id: string
+          location: string | null
+          notes: string | null
+          payment_status: string | null
+          rate: number | null
+          service_type: string
+          session_date: string
+          session_time: string
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          booked_at?: string
+          counselor_id: string
+          counselor_notes?: string | null
+          id?: string
+          location?: string | null
+          notes?: string | null
+          payment_status?: string | null
+          rate?: number | null
+          service_type: string
+          session_date: string
+          session_time: string
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          booked_at?: string
+          counselor_id?: string
+          counselor_notes?: string | null
+          id?: string
+          location?: string | null
+          notes?: string | null
+          payment_status?: string | null
+          rate?: number | null
+          service_type?: string
+          session_date?: string
+          session_time?: string
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sessions_counselor_id_fkey"
+            columns: ["counselor_id"]
+            isOneToOne: false
+            referencedRelation: "counselors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

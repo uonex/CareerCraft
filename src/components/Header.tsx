@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Globe, Menu } from "lucide-react";
 
 export const Header = () => {
+  const navigate = useNavigate();
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-border shadow-soft">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
