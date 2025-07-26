@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { User, Session } from "@supabase/supabase-js";
 import { toast } from "sonner";
@@ -18,8 +18,9 @@ const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeSection, setActiveSection] = useState("dashboard");
+  const [activeSection, setActiveSection] = useState("home");
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // Get initial session
@@ -48,6 +49,15 @@ const Dashboard = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  useEffect(() => {
+    // Handle navigation state from header booking
+    if (location.state?.activeSection) {
+      setActiveSection(location.state.activeSection);
+      // Clear the state
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+
   const handleSignOut = async () => {
     try {
       await supabase.auth.signOut();
@@ -72,18 +82,18 @@ const Dashboard = () => {
 
   const renderActiveSection = () => {
     switch (activeSection) {
-      case "dashboard":
+      case "home":
         return <DashboardOverview user={user} />;
+      case "history":
+        return <SessionsSection user={user} />;
+      case "notifications":
+        return <MessagesSection user={user} />;
       case "profile":
         return <ProfileSection user={user} />;
-      case "sessions":
-        return <SessionsSection user={user} />;
       case "assessments":
         return <AssessmentsSection user={user} />;
       case "resources":
         return <ResourcesSection user={user} />;
-      case "messages":
-        return <MessagesSection user={user} />;
       case "progress":
         return <ProgressSection user={user} />;
       case "booking":

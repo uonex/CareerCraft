@@ -5,10 +5,10 @@ import {
   Calendar, 
   FileText, 
   BookOpen, 
-  MessageSquare, 
+  Bell, 
   TrendingUp, 
   Plus,
-  HelpCircle
+  History
 } from "lucide-react";
 
 interface DashboardSidebarProps {
@@ -17,15 +17,14 @@ interface DashboardSidebarProps {
 }
 
 const navigationItems = [
-  { id: "dashboard", label: "Dashboard", icon: Home },
+  { id: "home", label: "Home", icon: Home },
+  { id: "history", label: "History", icon: History },
+  { id: "notifications", label: "Notifications", icon: Bell },
+  { id: "booking", label: "Book Session", icon: Plus },
   { id: "profile", label: "My Profile", icon: User },
-  { id: "sessions", label: "My Sessions", icon: Calendar },
-  { id: "assessments", label: "My Assessments", icon: FileText },
-  { id: "resources", label: "Recommended Resources", icon: BookOpen },
-  { id: "messages", label: "Messages", icon: MessageSquare },
-  { id: "progress", label: "Progress Tracker", icon: TrendingUp },
-  { id: "booking", label: "Book New Session", icon: Plus },
-  { id: "help", label: "Help & Support", icon: HelpCircle },
+  { id: "assessments", label: "Assessments", icon: FileText },
+  { id: "resources", label: "Resources", icon: BookOpen },
+  { id: "progress", label: "Progress", icon: TrendingUp },
 ];
 
 export const DashboardSidebar = ({ activeSection, onSectionChange }: DashboardSidebarProps) => {

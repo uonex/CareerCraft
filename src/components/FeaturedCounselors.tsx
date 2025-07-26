@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, Award, Users } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const counselors = [
   {
@@ -39,6 +40,7 @@ const counselors = [
 ];
 
 export const FeaturedCounselors = () => {
+  const navigate = useNavigate();
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted/30">
       <div className="container mx-auto px-4">
@@ -137,7 +139,10 @@ export const FeaturedCounselors = () => {
                 </div>
 
                 {/* CTA Button */}
-                <button className="w-full bg-gradient-primary text-white py-3 rounded-lg font-medium hover:shadow-medium transform hover:scale-105 transition-all duration-300">
+                <button 
+                  onClick={() => navigate('/auth')}
+                  className="w-full bg-gradient-primary text-white py-3 rounded-lg font-medium hover:shadow-medium transform hover:scale-105 transition-all duration-300"
+                >
                   Book Session
                 </button>
               </div>

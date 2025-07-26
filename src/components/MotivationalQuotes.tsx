@@ -1,3 +1,7 @@
+import { Card } from "@/components/ui/card";
+import { Quote } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
 const quotes = [
   {
     text: "The future belongs to those who believe in the beauty of their dreams.",
@@ -22,6 +26,7 @@ const quotes = [
 ];
 
 export const MotivationalQuotes = () => {
+  const navigate = useNavigate();
   return (
     <section className="py-20 bg-background">
       <div className="container mx-auto px-4">
@@ -81,7 +86,10 @@ export const MotivationalQuotes = () => {
               Every great achievement began with the decision to try. Take the first step towards 
               discovering your potential and crafting the career of your dreams.
             </p>
-            <button className="bg-gradient-primary text-white px-8 py-4 rounded-lg font-semibold hover:shadow-strong transform hover:scale-105 transition-all duration-300">
+            <button 
+              onClick={() => navigate('/auth')}
+              className="bg-gradient-primary text-white px-8 py-4 rounded-lg font-semibold hover:shadow-strong transform hover:scale-105 transition-all duration-300"
+            >
               Begin Your Journey
             </button>
           </div>

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { User } from "@supabase/supabase-js";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, FileText, TrendingUp, Plus } from "lucide-react";
+import { Calendar, FileText, TrendingUp, Plus, Quote } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface DashboardOverviewProps {
@@ -15,6 +15,37 @@ interface DashboardStats {
   totalSessions: number;
 }
 
+const dailyQuotes = [
+  {
+    text: "Your future is created by what you do today, not tomorrow.",
+    author: "Robert Kiyosaki"
+  },
+  {
+    text: "The best time to plant a tree was 20 years ago. The second best time is now.",
+    author: "Chinese Proverb"
+  },
+  {
+    text: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+    author: "Winston Churchill"
+  },
+  {
+    text: "Your career is a journey, not a destination. Enjoy the ride.",
+    author: "Career Craft"
+  },
+  {
+    text: "Don't be afraid to give up the good to go for the great.",
+    author: "John D. Rockefeller"
+  },
+  {
+    text: "The only way to do great work is to love what you do.",
+    author: "Steve Jobs"
+  },
+  {
+    text: "Believe you can and you're halfway there.",
+    author: "Theodore Roosevelt"
+  }
+];
+
 export const DashboardOverview = ({ user }: DashboardOverviewProps) => {
   const [stats, setStats] = useState<DashboardStats>({
     upcomingSessions: 0,
@@ -22,9 +53,14 @@ export const DashboardOverview = ({ user }: DashboardOverviewProps) => {
     totalSessions: 0
   });
   const [loading, setLoading] = useState(true);
+  const [dailyQuote, setDailyQuote] = useState(dailyQuotes[0]);
 
   useEffect(() => {
     fetchDashboardStats();
+    // Set daily quote based on date to ensure it changes daily
+    const today = new Date();
+    const dayOfYear = Math.floor((today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) / 86400000);
+    setDailyQuote(dailyQuotes[dayOfYear % dailyQuotes.length]);
   }, [user.id]);
 
   const fetchDashboardStats = async () => {
@@ -73,6 +109,30 @@ export const DashboardOverview = ({ user }: DashboardOverviewProps) => {
         </h2>
         <p className="text-muted-foreground">
           Let's continue crafting your future together.
+        </p>
+      </div>
+
+      {/* Daily Motivational Quote */}
+      <Card className="bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 border-primary/20">
+        <CardContent className="p-8 text-center">
+          <Quote className="h-8 w-8 text-primary mx-auto mb-4" />
+          <blockquote className="text-2xl md:text-3xl font-bold text-foreground mb-4 leading-relaxed">
+            "{dailyQuote.text}"
+          </blockquote>
+          <cite className="text-lg text-muted-foreground font-medium">
+            — {dailyQuote.author}
+          </cite>
+        </CardContent>
+      </Card>
+
+      {/* Book Session Button */}
+      <div className="text-center">
+        <Button size="lg" className="bg-gradient-primary hover:bg-gradient-primary/90 text-white px-8 py-4 text-lg">
+          <Plus className="h-5 w-5 mr-2" />
+          Book a Session
+        </Button>
+        <p className="text-sm text-muted-foreground mt-2">
+          Start your personalized career guidance journey today
         </p>
       </div>
 

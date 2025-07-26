@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Search, Users, Rocket, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const steps = [
   {
@@ -26,6 +27,7 @@ const steps = [
 ];
 
 export const HowItWorks = () => {
+  const navigate = useNavigate();
   return (
     <section className="py-20 bg-background">
       <div className="container mx-auto px-4">
@@ -100,7 +102,10 @@ export const HowItWorks = () => {
             <p className="text-white/90 mb-6 text-lg">
               Join thousands of students who have discovered their perfect career path with Career Craft.
             </p>
-            <button className="bg-white text-primary px-8 py-4 rounded-lg font-semibold hover:shadow-strong transform hover:scale-105 transition-all duration-300">
+            <button 
+              onClick={() => navigate('/auth')}
+              className="bg-white text-primary px-8 py-4 rounded-lg font-semibold hover:shadow-strong transform hover:scale-105 transition-all duration-300"
+            >
               Get Started Today
             </button>
           </div>
