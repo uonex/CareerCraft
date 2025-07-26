@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Globe, Menu } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
   const navigate = useNavigate();
