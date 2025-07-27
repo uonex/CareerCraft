@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { User } from "@supabase/supabase-js";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,12 +22,23 @@ interface Assessment {
   results_json: any;
 }
 
+interface AssessmentType {
+  id: string;
+  name: string;
+  description: string;
+  estimated_duration: string;
+  is_active: boolean;
+}
+
 export const AssessmentsSection = ({ user }: AssessmentsSectionProps) => {
   const [assessments, setAssessments] = useState<Assessment[]>([]);
+  const [assessmentTypes, setAssessmentTypes] = useState<AssessmentType[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchAssessments();
+    fetchAssessmentTypes();
   }, [user.id]);
 
   const fetchAssessments = async () => {
@@ -47,6 +59,22 @@ export const AssessmentsSection = ({ user }: AssessmentsSectionProps) => {
     }
   };
 
+  const fetchAssessmentTypes = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("assessment_types")
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      setAssessmentTypes(data || []);
+    } catch (error) {
+      console.error("Error fetching assessment types:", error);
+    }
+  };
+
   const getScoreBadge = (score: number) => {
     if (score >= 80) return <Badge variant="default">Excellent</Badge>;
     if (score >= 60) return <Badge variant="secondary">Good</Badge>;
@@ -54,29 +82,51 @@ export const AssessmentsSection = ({ user }: AssessmentsSectionProps) => {
     return <Badge variant="destructive">Needs Improvement</Badge>;
   };
 
-  const availableAssessments = [
+  // Default assessments if no custom ones are available
+  const defaultAssessments = [
     {
       id: "career-aptitude",
       name: "Career Aptitude Test",
       description: "Discover your natural talents and abilities across different career domains.",
-      duration: "20-30 minutes",
+      estimated_duration: "20-30 minutes",
       icon: Brain
     },
     {
       id: "interest-profiler",
       name: "Interest Profiler",
       description: "Identify what truly motivates and interests you in potential career paths.",
-      duration: "15-20 minutes",
+      estimated_duration: "15-20 minutes",
       icon: TrendingUp
     },
     {
       id: "personality-assessment",
       name: "Personality Assessment",
       description: "Understand your personality type and how it relates to career success.",
-      duration: "25-35 minutes",
+      estimated_duration: "25-35 minutes",
       icon: FileText
     }
   ];
+
+  const availableAssessments = assessmentTypes.length > 0 
+    ? assessmentTypes.map(type => ({
+        id: type.name.toLowerCase().replace(/\s+/g, '-'),
+        name: type.name,
+        description: type.description,
+        estimated_duration: type.estimated_duration,
+        icon: FileText
+      }))
+    : defaultAssessments;
+
+  const handleStartAssessment = (assessmentId: string) => {
+    navigate(`/assessment/${assessmentId}`);
+  };
+
+  const handleTakeAssessment = () => {
+    // Navigate to first available assessment
+    if (availableAssessments.length > 0) {
+      navigate(`/assessment/${availableAssessments[0].id}`);
+    }
+  };
 
   if (loading) {
     return <div className="animate-pulse">Loading assessments...</div>;
@@ -106,7 +156,10 @@ export const AssessmentsSection = ({ user }: AssessmentsSectionProps) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {availableAssessments.map((assessment) => {
               const Icon = assessment.icon;
-              const hasCompleted = assessments.some(a => a.assessment_type.toLowerCase().includes(assessment.id.split('-')[0]));
+              const hasCompleted = assessments.some(a => 
+                a.assessment_type.toLowerCase().includes(assessment.name.toLowerCase()) ||
+                a.assessment_type.toLowerCase().includes(assessment.id.split('-')[0])
+              );
               
               return (
                 <Card key={assessment.id} className="border-2 hover:border-primary/20 transition-colors">
@@ -119,11 +172,17 @@ export const AssessmentsSection = ({ user }: AssessmentsSectionProps) => {
                   <CardContent className="space-y-3">
                     <p className="text-xs text-muted-foreground">{assessment.description}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">{assessment.duration}</span>
+                      <span className="text-xs text-muted-foreground">{assessment.estimated_duration}</span>
                       {hasCompleted ? (
                         <Badge variant="secondary">Completed</Badge>
                       ) : (
-                        <Button size="sm" variant="outline">Start</Button>
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleStartAssessment(assessment.id)}
+                        >
+                          Start
+                        </Button>
                       )}
                     </div>
                   </CardContent>
@@ -145,7 +204,7 @@ export const AssessmentsSection = ({ user }: AssessmentsSectionProps) => {
                 <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p className="text-lg mb-2">No assessments completed yet</p>
                 <p className="text-sm mb-4">Take your first assessment to discover your career potential!</p>
-                <Button>
+                <Button onClick={handleTakeAssessment}>
                   <Plus className="h-4 w-4 mr-2" />
                   Take Assessment
                 </Button>
