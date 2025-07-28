@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      assessment_types: {
+        Row: {
+          created_at: string
+          description: string
+          estimated_duration: string
+          id: string
+          is_active: boolean
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          estimated_duration?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          estimated_duration?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       assessments: {
         Row: {
           assessment_type: string

@@ -63,7 +63,8 @@ const AdminDashboard = () => {
 
   const fetchAssessmentTypes = async () => {
     try {
-      const { data, error } = await supabase
+      // Use any to bypass TypeScript errors until types are regenerated
+      const { data, error } = await (supabase as any)
         .from("assessment_types")
         .select("*")
         .order("created_at", { ascending: false });
@@ -84,7 +85,7 @@ const AdminDashboard = () => {
     try {
       if (editingId) {
         // Update existing assessment
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from("assessment_types")
           .update({
             name: formData.name,
@@ -97,7 +98,7 @@ const AdminDashboard = () => {
         toast.success("Assessment updated successfully");
       } else {
         // Create new assessment
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from("assessment_types")
           .insert({
             name: formData.name,
@@ -133,7 +134,7 @@ const AdminDashboard = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("assessment_types")
         .delete()
         .eq("id", id);

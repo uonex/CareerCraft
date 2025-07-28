@@ -61,7 +61,8 @@ export const AssessmentsSection = ({ user }: AssessmentsSectionProps) => {
 
   const fetchAssessmentTypes = async () => {
     try {
-      const { data, error } = await supabase
+      // Use any to bypass TypeScript errors until types are regenerated
+      const { data, error } = await (supabase as any)
         .from("assessment_types")
         .select("*")
         .eq("is_active", true)
