@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      analytics_metrics: {
+        Row: {
+          created_at: string
+          date_recorded: string
+          id: string
+          metric_name: string
+          metric_type: string
+          metric_value: number
+        }
+        Insert: {
+          created_at?: string
+          date_recorded?: string
+          id?: string
+          metric_name: string
+          metric_type: string
+          metric_value: number
+        }
+        Update: {
+          created_at?: string
+          date_recorded?: string
+          id?: string
+          metric_name?: string
+          metric_type?: string
+          metric_value?: number
+        }
+        Relationships: []
+      }
       assessment_types: {
         Row: {
           created_at: string
@@ -157,6 +184,45 @@ export type Database = {
           rate_per_session?: number | null
           specializations?: string[] | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      feedback: {
+        Row: {
+          category: string | null
+          counselor_id: string | null
+          created_at: string
+          id: string
+          is_deleted: boolean | null
+          is_read: boolean | null
+          message: string
+          session_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          counselor_id?: string | null
+          created_at?: string
+          id?: string
+          is_deleted?: boolean | null
+          is_read?: boolean | null
+          message: string
+          session_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          counselor_id?: string | null
+          created_at?: string
+          id?: string
+          is_deleted?: boolean | null
+          is_read?: boolean | null
+          message?: string
+          session_id?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
