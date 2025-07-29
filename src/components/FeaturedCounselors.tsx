@@ -150,15 +150,6 @@ export const FeaturedCounselors = () => {
           ))}
         </div>
 
-        {/* View All Counselors */}
-        <div className="text-center mt-12 animate-fade-in">
-          <p className="text-muted-foreground mb-6">
-            Want to explore more counselors and their specializations?
-          </p>
-          <button className="border border-primary/20 text-primary px-8 py-4 rounded-lg font-semibold hover:bg-primary hover:text-white hover:shadow-medium transition-all duration-300">
-            View All Counselors
-          </button>
-        </div>
       </div>
     </section>
   );

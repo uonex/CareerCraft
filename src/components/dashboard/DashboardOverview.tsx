@@ -221,27 +221,6 @@ export const DashboardOverview = ({ user }: DashboardOverviewProps) => {
         </Card>
       )}
 
-      {/* Recommended Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recommended Actions</CardTitle>
-          <CardDescription>Continue your career journey with these next steps</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex items-center justify-between p-3 bg-primary/5 rounded-lg">
-            <span className="text-sm">Complete your profile for better recommendations</span>
-            <Button size="sm" variant="outline">Complete</Button>
-          </div>
-          <div className="flex items-center justify-between p-3 bg-secondary/5 rounded-lg">
-            <span className="text-sm">Explore career resources tailored for you</span>
-            <Button size="sm" variant="outline">Explore</Button>
-          </div>
-          <div className="flex items-center justify-between p-3 bg-accent/5 rounded-lg">
-            <span className="text-sm">Connect with your assigned counselor</span>
-            <Button size="sm" variant="outline">Message</Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };

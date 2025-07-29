@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Users, Target, Globe, Lightbulb, Award, Clock } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const features = [
   {
@@ -100,10 +101,17 @@ export const WhyCareerCraft = () => {
             Ready to take control of your career journey?
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-gradient-primary text-white px-8 py-4 rounded-lg font-semibold hover:shadow-strong transform hover:scale-105 transition-all duration-300">
-              Explore Our Services
-            </button>
-            <button className="border border-primary/20 text-primary px-8 py-4 rounded-lg font-semibold hover:bg-primary hover:text-white hover:shadow-medium transition-all duration-300">
+            <button 
+              className="border border-primary/20 text-primary px-8 py-4 rounded-lg font-semibold hover:bg-primary hover:text-white hover:shadow-medium transition-all duration-300"
+              onClick={async () => {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session?.user) {
+                  window.location.href = '/dashboard?tab=assessments';
+                } else {
+                  window.location.href = '/auth';
+                }
+              }}
+            >
               Take Free Assessment
             </button>
           </div>

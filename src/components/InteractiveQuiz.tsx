@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { ChevronRight, RefreshCw, Award } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const questions = [
   {
@@ -200,7 +201,18 @@ export const InteractiveQuiz = () => {
 
                 {/* Actions */}
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button variant="hero" size="lg">
+                  <Button 
+                    variant="hero" 
+                    size="lg"
+                    onClick={async () => {
+                      const { data: { session } } = await supabase.auth.getSession();
+                      if (session?.user) {
+                        window.location.href = '/dashboard?tab=assessments';
+                      } else {
+                        window.location.href = '/auth';
+                      }
+                    }}
+                  >
                     Get Detailed Assessment
                   </Button>
                   <Button variant="outline" onClick={resetQuiz} size="lg">
@@ -223,7 +235,18 @@ export const InteractiveQuiz = () => {
             <p className="text-muted-foreground mb-4">
               Want more detailed insights about your career potential?
             </p>
-            <Button variant="outline" size="lg">
+            <Button 
+              variant="outline" 
+              size="lg"
+              onClick={async () => {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session?.user) {
+                  window.location.href = '/dashboard?tab=assessments';
+                } else {
+                  window.location.href = '/auth';
+                }
+              }}
+            >
               Schedule Professional Assessment
             </Button>
           </div>

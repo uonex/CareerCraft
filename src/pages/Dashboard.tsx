@@ -56,7 +56,14 @@ const Dashboard = () => {
       // Clear the state
       window.history.replaceState({}, document.title);
     }
-  }, [location.state]);
+    
+    // Handle URL search parameters for tab navigation
+    const searchParams = new URLSearchParams(location.search);
+    const tabParam = searchParams.get('tab');
+    if (tabParam) {
+      setActiveSection(tabParam);
+    }
+  }, [location.state, location.search]);
 
   const handleSignOut = async () => {
     try {
