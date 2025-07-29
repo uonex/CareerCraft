@@ -41,8 +41,104 @@ export type Database = {
         }
         Relationships: []
       }
+      assessment_questions: {
+        Row: {
+          assessment_type_id: string
+          created_at: string
+          id: string
+          max_selections: number | null
+          min_selections: number | null
+          next_question_logic: Json | null
+          options: Json | null
+          order_index: number
+          placeholder: string | null
+          question_id: string
+          question_text: string
+          question_type: string
+          scoring: Json | null
+          updated_at: string
+        }
+        Insert: {
+          assessment_type_id: string
+          created_at?: string
+          id?: string
+          max_selections?: number | null
+          min_selections?: number | null
+          next_question_logic?: Json | null
+          options?: Json | null
+          order_index?: number
+          placeholder?: string | null
+          question_id: string
+          question_text: string
+          question_type: string
+          scoring?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          assessment_type_id?: string
+          created_at?: string
+          id?: string
+          max_selections?: number | null
+          min_selections?: number | null
+          next_question_logic?: Json | null
+          options?: Json | null
+          order_index?: number
+          placeholder?: string | null
+          question_id?: string
+          question_text?: string
+          question_type?: string
+          scoring?: Json | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_questions_assessment_type_id_fkey"
+            columns: ["assessment_type_id"]
+            isOneToOne: false
+            referencedRelation: "assessment_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assessment_results_logic: {
+        Row: {
+          assessment_type_id: string
+          condition_data: Json
+          condition_type: string
+          created_at: string
+          id: string
+          recommendation: string
+        }
+        Insert: {
+          assessment_type_id: string
+          condition_data: Json
+          condition_type: string
+          created_at?: string
+          id?: string
+          recommendation: string
+        }
+        Update: {
+          assessment_type_id?: string
+          condition_data?: Json
+          condition_type?: string
+          created_at?: string
+          id?: string
+          recommendation?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_results_logic_assessment_type_id_fkey"
+            columns: ["assessment_type_id"]
+            isOneToOne: false
+            referencedRelation: "assessment_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assessment_types: {
         Row: {
+          content_file_name: string | null
+          content_uploaded_at: string | null
           created_at: string
           description: string
           estimated_duration: string
@@ -52,6 +148,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          content_file_name?: string | null
+          content_uploaded_at?: string | null
           created_at?: string
           description: string
           estimated_duration?: string
@@ -61,6 +159,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          content_file_name?: string | null
+          content_uploaded_at?: string | null
           created_at?: string
           description?: string
           estimated_duration?: string

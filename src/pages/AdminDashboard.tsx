@@ -8,9 +8,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Plus, Edit, Trash2, LogOut, Settings, BarChart3, MessageSquare } from "lucide-react";
+import { Plus, Edit, Trash2, LogOut, Settings, BarChart3, MessageSquare, Upload } from "lucide-react";
 import AdminAnalytics from "@/components/admin/AdminAnalytics";
 import AdminFeedback from "@/components/admin/AdminFeedback";
+import AssessmentFileUpload from "@/components/admin/AssessmentFileUpload";
 import { supabase } from "@/integrations/supabase/client";
 import {
   Dialog,
@@ -39,6 +40,8 @@ interface AssessmentType {
   estimated_duration: string;
   is_active: boolean;
   created_at: string;
+  content_file_name?: string;
+  content_uploaded_at?: string;
 }
 
 const AdminDashboard = () => {
@@ -51,6 +54,7 @@ const AdminDashboard = () => {
   });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -217,71 +221,78 @@ const AdminDashboard = () => {
                       Manage assessment types available to users
                     </CardDescription>
                   </div>
-                  <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button onClick={resetForm}>
-                        <Plus className="h-4 w-4 mr-2" />
-                        Add Assessment
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>
-                          {editingId ? "Edit Assessment" : "Add New Assessment"}
-                        </DialogTitle>
-                        <DialogDescription>
-                          {editingId 
-                            ? "Update the assessment details below."
-                            : "Create a new assessment type for users to take."
-                          }
-                        </DialogDescription>
-                      </DialogHeader>
-                      <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="name">Assessment Name</Label>
-                          <Input
-                            id="name"
-                            value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            placeholder="e.g., Emotional Intelligence Test"
-                            required
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="description">Description</Label>
-                          <Textarea
-                            id="description"
-                            value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            placeholder="Describe what this assessment measures..."
-                            required
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="duration">Estimated Duration</Label>
-                          <Input
-                            id="duration"
-                            value={formData.estimated_duration}
-                            onChange={(e) => setFormData({ ...formData, estimated_duration: e.target.value })}
-                            placeholder="e.g., 30-45 minutes"
-                            required
-                          />
-                        </div>
-                        <div className="flex justify-end gap-2">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => setDialogOpen(false)}
-                          >
-                            Cancel
-                          </Button>
-                          <Button type="submit">
-                            {editingId ? "Save Changes" : "Create Assessment"}
-                          </Button>
-                        </div>
-                      </form>
-                    </DialogContent>
-                  </Dialog>
+                  <div className="flex gap-2">
+                    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" onClick={resetForm}>
+                          <Edit className="h-4 w-4 mr-2" />
+                          Edit Metadata
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>
+                            {editingId ? "Edit Assessment" : "Add Assessment (Simple)"}
+                          </DialogTitle>
+                          <DialogDescription>
+                            {editingId 
+                              ? "Update the assessment metadata below."
+                              : "Create a basic assessment type. For advanced assessments with custom questions, use the file upload option."
+                            }
+                          </DialogDescription>
+                        </DialogHeader>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="name">Assessment Name</Label>
+                            <Input
+                              id="name"
+                              value={formData.name}
+                              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                              placeholder="e.g., Emotional Intelligence Test"
+                              required
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="description">Description</Label>
+                            <Textarea
+                              id="description"
+                              value={formData.description}
+                              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                              placeholder="Describe what this assessment measures..."
+                              required
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="duration">Estimated Duration</Label>
+                            <Input
+                              id="duration"
+                              value={formData.estimated_duration}
+                              onChange={(e) => setFormData({ ...formData, estimated_duration: e.target.value })}
+                              placeholder="e.g., 30-45 minutes"
+                              required
+                            />
+                          </div>
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => setDialogOpen(false)}
+                            >
+                              Cancel
+                            </Button>
+                            <Button type="submit">
+                              {editingId ? "Save Changes" : "Create Assessment"}
+                            </Button>
+                          </div>
+                        </form>
+                      </DialogContent>
+                    </Dialog>
+                    
+                    <Button onClick={() => setUploadDialogOpen(true)}>
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload Assessment
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent>
@@ -304,6 +315,11 @@ const AdminDashboard = () => {
                             <Badge variant={assessment.is_active ? "default" : "secondary"}>
                               {assessment.is_active ? "Active" : "Inactive"}
                             </Badge>
+                            {assessment.content_file_name && (
+                              <Badge variant="outline" className="text-xs">
+                                File: {assessment.content_file_name}
+                              </Badge>
+                            )}
                           </div>
                           <p className="text-sm text-muted-foreground">
                             {assessment.description}
@@ -362,6 +378,13 @@ const AdminDashboard = () => {
             <AdminFeedback />
           </TabsContent>
         </Tabs>
+        
+        {/* File Upload Dialog */}
+        <AssessmentFileUpload 
+          open={uploadDialogOpen}
+          onOpenChange={setUploadDialogOpen}
+          onSuccess={fetchAssessmentTypes}
+        />
       </div>
     </div>
   );
