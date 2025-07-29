@@ -203,19 +203,19 @@ const AdminAnalytics = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div className="space-y-2">
                   <p className="text-sm text-muted-foreground">Total Users</p>
-                  <p className="text-2xl font-bold">{analyticsData.growth.total_users || 0}</p>
+                  <p className="text-2xl font-bold">{analyticsData.growth?.total_users || 0}</p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-muted-foreground">New Today</p>
-                  <p className="text-2xl font-bold text-green-600">{analyticsData.growth.new_registrations_today || 0}</p>
+                  <p className="text-2xl font-bold text-green-600">{analyticsData.growth?.new_registrations_today || 0}</p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-muted-foreground">Active Users (30d)</p>
-                  <p className="text-2xl font-bold">{analyticsData.growth.active_users_30d || 0}</p>
+                  <p className="text-2xl font-bold">{analyticsData.growth?.active_users_30d || 0}</p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-muted-foreground">Retention Rate</p>
-                  <p className="text-2xl font-bold">{analyticsData.growth.retention_rate_30d || 0}%</p>
+                  <p className="text-2xl font-bold">{analyticsData.growth?.retention_rate_30d || 0}%</p>
                 </div>
               </div>
               <ResponsiveContainer width="100%" height={300}>
@@ -249,23 +249,23 @@ const AdminAnalytics = () => {
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
                 <div className="space-y-2">
                   <p className="text-sm text-muted-foreground">Total Sessions</p>
-                  <p className="text-2xl font-bold">{analyticsData.sales.total_sessions_booked || 0}</p>
+                  <p className="text-2xl font-bold">{analyticsData.sales?.total_sessions_booked || 0}</p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-muted-foreground">Today</p>
-                  <p className="text-2xl font-bold text-blue-600">{analyticsData.sales.sessions_today || 0}</p>
+                  <p className="text-2xl font-bold text-blue-600">{analyticsData.sales?.sessions_today || 0}</p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-muted-foreground">Total Revenue</p>
-                  <p className="text-2xl font-bold">${analyticsData.sales.revenue_total || 0}</p>
+                  <p className="text-2xl font-bold">${analyticsData.sales?.revenue_total || 0}</p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-muted-foreground">Avg Price</p>
-                  <p className="text-2xl font-bold">${analyticsData.sales.average_session_price || 0}</p>
+                  <p className="text-2xl font-bold">${analyticsData.sales?.average_session_price || 0}</p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-muted-foreground">Conversion</p>
-                  <p className="text-2xl font-bold">{analyticsData.sales.conversion_rate || 0}%</p>
+                  <p className="text-2xl font-bold">{analyticsData.sales?.conversion_rate || 0}%</p>
                 </div>
               </div>
               <ResponsiveContainer width="100%" height={300}>
@@ -299,11 +299,11 @@ const AdminAnalytics = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <p className="text-sm text-muted-foreground">Website Visitors Today</p>
-                  <p className="text-2xl font-bold">{analyticsData.outreach.website_visitors_today || 0}</p>
+                  <p className="text-2xl font-bold">{analyticsData.outreach?.website_visitors_today || 0}</p>
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm text-muted-foreground">Leads Generated</p>
-                  <p className="text-2xl font-bold">{analyticsData.outreach.leads_generated || 0}</p>
+                  <p className="text-2xl font-bold">{analyticsData.outreach?.leads_generated || 0}</p>
                 </div>
               </div>
             </CardContent>
