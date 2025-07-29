@@ -62,6 +62,9 @@ const Dashboard = () => {
     const tabParam = searchParams.get('tab');
     if (tabParam) {
       setActiveSection(tabParam);
+      // Update URL without the tab parameter to keep it clean
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
     }
   }, [location.state, location.search]);
 

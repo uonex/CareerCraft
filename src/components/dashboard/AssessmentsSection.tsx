@@ -264,7 +264,10 @@ export const AssessmentsSection = ({ user }: AssessmentsSectionProps) => {
                     <FileText className="h-4 w-4 mr-2" />
                     View Full Report
                   </Button>
-                  <Button size="sm">
+                  <Button 
+                    size="sm"
+                    onClick={() => navigate('/dashboard?tab=booking')}
+                  >
                     Discuss with Counselor
                   </Button>
                 </div>

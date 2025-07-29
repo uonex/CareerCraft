@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BookOpen, ExternalLink, Clock, Bookmark, BookmarkCheck } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 interface ResourcesSectionProps {
@@ -120,6 +121,7 @@ const featuredArticles = [
 ];
 
 export const ResourcesSection = ({ user }: ResourcesSectionProps) => {
+  const navigate = useNavigate();
   const [savedResources, setSavedResources] = useState<string[]>([]);
 
   const toggleSave = (resourceTitle: string) => {

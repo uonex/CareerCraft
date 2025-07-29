@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { ChevronRight, RefreshCw, Award } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 const questions = [
@@ -62,6 +63,7 @@ const careerSuggestions = {
 };
 
 export const InteractiveQuiz = () => {
+  const navigate = useNavigate();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const [showResults, setShowResults] = useState(false);
@@ -207,9 +209,9 @@ export const InteractiveQuiz = () => {
                     onClick={async () => {
                       const { data: { session } } = await supabase.auth.getSession();
                       if (session?.user) {
-                        window.location.href = '/dashboard?tab=assessments';
+                        navigate('/dashboard?tab=assessments');
                       } else {
-                        window.location.href = '/auth';
+                        navigate('/auth');
                       }
                     }}
                   >
@@ -241,9 +243,9 @@ export const InteractiveQuiz = () => {
               onClick={async () => {
                 const { data: { session } } = await supabase.auth.getSession();
                 if (session?.user) {
-                  window.location.href = '/dashboard?tab=assessments';
+                  navigate('/dashboard?tab=assessments');
                 } else {
-                  window.location.href = '/auth';
+                  navigate('/auth');
                 }
               }}
             >

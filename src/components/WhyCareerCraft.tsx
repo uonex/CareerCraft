@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Users, Target, Globe, Lightbulb, Award, Clock } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 const features = [
@@ -42,6 +43,8 @@ const features = [
 ];
 
 export const WhyCareerCraft = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted/30">
       <div className="container mx-auto px-4">
@@ -101,19 +104,21 @@ export const WhyCareerCraft = () => {
             Ready to take control of your career journey?
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button 
+            <Button 
               className="border border-primary/20 text-primary px-8 py-4 rounded-lg font-semibold hover:bg-primary hover:text-white hover:shadow-medium transition-all duration-300"
+              variant="outline"
+              size="lg"
               onClick={async () => {
                 const { data: { session } } = await supabase.auth.getSession();
                 if (session?.user) {
-                  window.location.href = '/dashboard?tab=assessments';
+                  navigate('/dashboard?tab=assessments');
                 } else {
-                  window.location.href = '/auth';
+                  navigate('/auth');
                 }
               }}
             >
               Take Free Assessment
-            </button>
+            </Button>
           </div>
         </div>
       </div>

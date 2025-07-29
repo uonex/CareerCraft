@@ -86,12 +86,13 @@ export const MotivationalQuotes = () => {
               Every great achievement began with the decision to try. Take the first step towards 
               discovering your potential and crafting the career of your dreams.
             </p>
-            <button 
+            <Button 
               onClick={() => navigate('/auth')}
-              className="bg-gradient-primary text-white px-8 py-4 rounded-lg font-semibold hover:shadow-strong transform hover:scale-105 transition-all duration-300"
+              variant="hero"
+              size="lg"
             >
               Begin Your Journey
-            </button>
+            </Button>
           </div>
         </div>
       </div>

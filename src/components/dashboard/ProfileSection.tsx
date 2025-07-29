@@ -242,7 +242,12 @@ export const ProfileSection = ({ user }: ProfileSectionProps) => {
       </Card>
 
       <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={saving}>
+        <Button 
+          onClick={handleSave} 
+          disabled={saving}
+          variant="default"
+          size="default"
+        >
           {saving ? "Saving..." : "Save Changes"}
         </Button>
       </div>

@@ -493,6 +493,7 @@ const AssessmentTaking = () => {
                 <Button
                   onClick={handleSubmit}
                   disabled={!isAnswerValid() || submitting}
+                  variant="hero"
                 >
                   {submitting ? (
                     "Submitting..."
@@ -507,6 +508,7 @@ const AssessmentTaking = () => {
                 <Button
                   onClick={handleNext}
                   disabled={!isAnswerValid()}
+                  variant="default"
                 >
                   Next
                 </Button>

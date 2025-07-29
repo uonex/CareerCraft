@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-image.jpg";
 
 export const HeroSection = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background */}
@@ -51,6 +54,7 @@ export const HeroSection = () => {
               variant="cta" 
               size="lg" 
               className="text-lg px-8 py-4 min-w-[200px]"
+              onClick={() => navigate('/auth')}
             >
               Start Your Journey
               <ArrowRight className="w-5 h-5 ml-2" />

@@ -102,12 +102,13 @@ export const HowItWorks = () => {
             <p className="text-white/90 mb-6 text-lg">
               Join thousands of students who have discovered their perfect career path with Career Craft.
             </p>
-            <button 
+            <Button 
               onClick={() => navigate('/auth')}
-              className="bg-white text-primary px-8 py-4 rounded-lg font-semibold hover:shadow-strong transform hover:scale-105 transition-all duration-300"
+              variant="cta"
+              size="lg"
             >
               Get Started Today
-            </button>
+            </Button>
           </div>
         </div>
       </div>

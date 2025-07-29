@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Star, Quote } from "lucide-react";
 
 const testimonials = [
@@ -123,9 +124,13 @@ export const Testimonials = () => {
           <p className="text-lg text-muted-foreground mb-6">
             Ready to write your own success story?
           </p>
-          <button className="bg-gradient-primary text-white px-8 py-4 rounded-lg font-semibold hover:shadow-strong transform hover:scale-105 transition-all duration-300">
+          <Button 
+            variant="hero"
+            size="lg"
+            onClick={() => window.location.href = '/auth'}
+          >
             Join Our Community
-          </button>
+          </Button>
         </div>
       </div>
     </section>

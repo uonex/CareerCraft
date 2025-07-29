@@ -46,7 +46,7 @@ export const Header = () => {
 
   const handleBookSession = () => {
     if (user) {
-      navigate('/dashboard', { state: { activeSection: 'booking' } });
+      navigate('/dashboard?tab=booking');
     } else {
       navigate('/auth');
     }
