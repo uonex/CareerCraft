@@ -1,12 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Globe, Menu } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const Header = () => {
   const navigate = useNavigate();
+  const { lang } = useParams<{ lang: string }>();
+  const { language, setLanguage, t } = useLanguage();
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -36,20 +39,27 @@ export const Header = () => {
   };
 
   const handleNavClick = (section: string) => {
+    const currentLang = lang || language;
     // If we're not on the home page, navigate to home first
-    if (window.location.pathname !== '/') {
-      navigate('/', { state: { scrollTo: section } });
+    if (window.location.pathname !== `/${currentLang}`) {
+      navigate(`/${currentLang}`, { state: { scrollTo: section } });
     } else {
       scrollToSection(section);
     }
   };
 
   const handleBookSession = () => {
+    const currentLang = lang || language;
     if (user) {
-      navigate('/dashboard', { state: { activeSection: 'booking' } });
+      navigate(`/${currentLang}/dashboard`, { state: { activeSection: 'booking' } });
     } else {
-      navigate('/auth');
+      navigate(`/${currentLang}/auth`);
     }
+  };
+
+  const toggleLanguage = () => {
+    const newLang = language === 'en' ? 'hi' : 'en';
+    setLanguage(newLang);
   };
 
   return (
@@ -58,7 +68,7 @@ export const Header = () => {
         {/* Logo */}
         <div 
           className="flex items-center space-x-2 cursor-pointer"
-          onClick={() => navigate('/')}
+          onClick={() => navigate(`/${language}`)}
         >
           <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-sm">CC</span>
@@ -75,40 +85,45 @@ export const Header = () => {
             onClick={() => handleNavClick('hero')} 
             className="text-foreground hover:text-primary transition-colors"
           >
-            Home
+            {t('header.home')}
           </button>
           <button 
             onClick={() => handleNavClick('services')} 
             className="text-foreground hover:text-primary transition-colors"
           >
-            Services
+            {t('header.services')}
           </button>
           <button 
             onClick={() => handleNavClick('counselors')} 
             className="text-foreground hover:text-primary transition-colors"
           >
-            Counselors
+            {t('header.counselors')}
           </button>
           <button 
             onClick={() => handleNavClick('resources')} 
             className="text-foreground hover:text-primary transition-colors"
           >
-            Resources
+            {t('header.resources')}
           </button>
           <button 
             onClick={() => handleNavClick('contact')} 
             className="text-foreground hover:text-primary transition-colors"
           >
-            Contact
+            {t('header.contact')}
           </button>
         </nav>
 
         {/* Right side actions */}
         <div className="flex items-center space-x-4">
           {/* Language Toggle */}
-          <Button variant="ghost" size="sm" className="hidden sm:flex items-center space-x-1">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="hidden sm:flex items-center space-x-1"
+            onClick={toggleLanguage}
+          >
             <Globe className="w-4 h-4" />
-            <span>EN / हिंदी</span>
+            <span>{language === 'en' ? 'EN / हिंदी' : 'हिंदी / EN'}</span>
           </Button>
 
           {/* User Actions */}
@@ -117,9 +132,9 @@ export const Header = () => {
               <Button 
                 variant="outline" 
                 size="sm"
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate(`/${language}/dashboard`)}
               >
-                Dashboard
+                {t('header.dashboard')}
               </Button>
               <Button 
                 variant="hero" 
@@ -127,7 +142,7 @@ export const Header = () => {
                 className="hidden sm:inline-flex"
                 onClick={handleBookSession}
               >
-                Book a Session
+                {t('header.bookSession')}
               </Button>
             </div>
           ) : (
@@ -137,7 +152,7 @@ export const Header = () => {
               className="hidden sm:inline-flex"
               onClick={handleBookSession}
             >
-              Book a Session
+              {t('header.bookSession')}
             </Button>
           )}
 

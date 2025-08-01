@@ -1,7 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, Award, Users } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const counselors = [
   {
@@ -41,17 +42,20 @@ const counselors = [
 
 export const FeaturedCounselors = () => {
   const navigate = useNavigate();
+  const { lang } = useParams<{ lang: string }>();
+  const { language, t } = useLanguage();
+
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted/30">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6">
-            Meet Our
-            <span className="bg-gradient-primary bg-clip-text text-transparent"> Expert Counselors</span>
+            {t('counselors.title')}
+            <span className="bg-gradient-primary bg-clip-text text-transparent"> {t('counselors.titleHighlight')}</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Our experienced counselors are here to guide you with personalized advice and industry insights.
+            {t('counselors.subtitle')}
           </p>
         </div>
 
@@ -63,11 +67,9 @@ export const FeaturedCounselors = () => {
               className="p-6 bg-gradient-card border-0 shadow-soft hover:shadow-medium transition-all duration-300 transform hover:scale-105 animate-scale-in relative overflow-hidden group"
               style={{ animationDelay: `${index * 150}ms` }}
             >
-              {/* Background Pattern */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-primary/5 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-500"></div>
               
               <div className="relative z-10">
-                {/* Header */}
                 <div className="flex items-start space-x-4 mb-6">
                   <div className="text-5xl">{counselor.image}</div>
                   <div className="flex-1">
@@ -78,7 +80,6 @@ export const FeaturedCounselors = () => {
                       {counselor.specialization}
                     </p>
                     
-                    {/* Stats */}
                     <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                       <div className="flex items-center space-x-1">
                         <Award className="w-4 h-4" />
@@ -92,7 +93,6 @@ export const FeaturedCounselors = () => {
                   </div>
                 </div>
 
-                {/* Rating */}
                 <div className="flex items-center space-x-2 mb-4">
                   <div className="flex items-center space-x-1">
                     {[...Array(5)].map((_, i) => (
@@ -105,19 +105,14 @@ export const FeaturedCounselors = () => {
                   <span className="text-sm font-semibold text-foreground">
                     {counselor.rating}
                   </span>
-                  <span className="text-xs text-muted-foreground">
-                    ({counselor.clients} students)
-                  </span>
                 </div>
 
-                {/* Bio */}
                 <p className="text-muted-foreground text-sm leading-relaxed mb-4">
                   {counselor.bio}
                 </p>
 
-                {/* Languages */}
                 <div className="flex items-center space-x-2 mb-4">
-                  <span className="text-xs font-medium text-muted-foreground">Languages:</span>
+                  <span className="text-xs font-medium text-muted-foreground">{t('counselors.languages')}:</span>
                   {counselor.languages.map((lang, langIndex) => (
                     <Badge key={langIndex} variant="secondary" className="text-xs">
                       {lang}
@@ -125,7 +120,6 @@ export const FeaturedCounselors = () => {
                   ))}
                 </div>
 
-                {/* Expertise Tags */}
                 <div className="flex flex-wrap gap-2 mb-6">
                   {counselor.expertise.map((skill, skillIndex) => (
                     <Badge 
@@ -138,18 +132,19 @@ export const FeaturedCounselors = () => {
                   ))}
                 </div>
 
-                {/* CTA Button */}
                 <button 
-                  onClick={() => navigate('/auth')}
+                  onClick={() => {
+                    const currentLang = lang || language;
+                    navigate(`/${currentLang}/auth`);
+                  }}
                   className="w-full bg-gradient-primary text-white py-3 rounded-lg font-medium hover:shadow-medium transform hover:scale-105 transition-all duration-300"
                 >
-                  Book Session
+                  {t('counselors.bookSession')}
                 </button>
               </div>
             </Card>
           ))}
         </div>
-
       </div>
     </section>
   );

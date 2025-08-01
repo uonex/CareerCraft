@@ -1,8 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
+import { useNavigate, useParams } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const HeroSection = () => {
+  const navigate = useNavigate();
+  const { lang } = useParams<{ lang: string }>();
+  const { language, t } = useLanguage();
+
+  const handleGetStarted = () => {
+    const currentLang = lang || language;
+    navigate(`/${currentLang}/auth`);
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background */}
@@ -33,16 +44,16 @@ export const HeroSection = () => {
         <div className="max-w-4xl mx-auto animate-slide-up">
           {/* Main Headline */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-            Unlock Your
+            {t('hero.title1')}
             <span className="block bg-gradient-to-r from-secondary to-yellow-300 bg-clip-text text-transparent">
-              Potential
+              {t('hero.title2')}
             </span>
             <span className="block">Craft Your Future</span>
           </h1>
 
           {/* Sub-headline */}
           <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Personalized career guidance for students to discover their ideal career path and achieve their dreams.
+            {t('hero.subtitle')}
           </p>
 
           {/* CTA Buttons */}
@@ -51,8 +62,9 @@ export const HeroSection = () => {
               variant="cta" 
               size="lg" 
               className="text-lg px-8 py-4 min-w-[200px]"
+              onClick={handleGetStarted}
             >
-              Start Your Journey
+              {t('hero.cta')}
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </div>
@@ -61,15 +73,15 @@ export const HeroSection = () => {
           <div className="flex flex-wrap justify-center items-center gap-8 mt-12 text-white/80 animate-fade-in delay-1000">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-secondary rounded-full"></div>
-              <span>5000+ Students Guided</span>
+              <span>5000+ {t('hero.students')}</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-secondary rounded-full"></div>
-              <span>Expert Counselors</span>
+              <span>Expert {t('header.counselors')}</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-secondary rounded-full"></div>
-              <span>English & हिंदी Support</span>
+              <span>{t('hero.support')}</span>
             </div>
           </div>
         </div>

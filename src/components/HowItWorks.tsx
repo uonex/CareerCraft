@@ -1,44 +1,48 @@
 import { Card } from "@/components/ui/card";
 import { Search, Users, Rocket, ArrowRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-
-const steps = [
-  {
-    icon: Search,
-    step: "01",
-    title: "Explore",
-    description: "Discover your strengths and interests with our comprehensive assessments and interactive tools.",
-    details: "Take personality tests, aptitude assessments, and explore various career paths that align with your unique profile."
-  },
-  {
-    icon: Users,
-    step: "02", 
-    title: "Connect",
-    description: "Book a personalized session with our expert counselors who understand your goals and challenges.",
-    details: "Get matched with counselors specializing in your areas of interest. Available in English and हिंदी."
-  },
-  {
-    icon: Rocket,
-    step: "03",
-    title: "Succeed", 
-    description: "Gain clarity and craft a roadmap for your dream career with actionable steps and ongoing support.",
-    details: "Receive a personalized career plan, skill development recommendations, and continuous guidance."
-  }
-];
+import { useNavigate, useParams } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const HowItWorks = () => {
   const navigate = useNavigate();
+  const { lang } = useParams<{ lang: string }>();
+  const { language, t } = useLanguage();
+
+  const steps = [
+    {
+      icon: Search,
+      step: "01",
+      title: t('howit.step1.title'),
+      description: t('howit.step1.desc'),
+      details: t('howit.step1.details')
+    },
+    {
+      icon: Users,
+      step: "02", 
+      title: t('howit.step2.title'),
+      description: t('howit.step2.desc'),
+      details: t('howit.step2.details')
+    },
+    {
+      icon: Rocket,
+      step: "03",
+      title: t('howit.step3.title'), 
+      description: t('howit.step3.desc'),
+      details: t('howit.step3.details')
+    }
+  ];
+
   return (
     <section className="py-20 bg-background">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6">
-            How It
+            {t('howit.title')}
             <span className="bg-gradient-secondary bg-clip-text text-transparent"> Works</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Three simple steps to discover your ideal career path and build a successful future.
+            {t('howit.subtitle')}
           </p>
         </div>
 
@@ -103,10 +107,13 @@ export const HowItWorks = () => {
               Join thousands of students who have discovered their perfect career path with Career Craft.
             </p>
             <button 
-              onClick={() => navigate('/auth')}
+              onClick={() => {
+                const currentLang = lang || language;
+                navigate(`/${currentLang}/auth`);
+              }}
               className="bg-white text-primary px-8 py-4 rounded-lg font-semibold hover:shadow-strong transform hover:scale-105 transition-all duration-300"
             >
-              Get Started Today
+              {t('howit.cta')}
             </button>
           </div>
         </div>
