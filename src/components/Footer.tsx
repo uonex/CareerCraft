@@ -1,6 +1,8 @@
 import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const Footer = () => {
+  const navigate = useNavigate();
   return (
     <footer className="bg-gradient-hero text-white">
       <div className="container mx-auto px-4 py-16">
@@ -32,12 +34,10 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              <li><a href="#about" className="text-white/80 hover:text-white transition-colors">About Us</a></li>
-              <li><a href="#services" className="text-white/80 hover:text-white transition-colors">Our Services</a></li>
-              <li><a href="#counselors" className="text-white/80 hover:text-white transition-colors">Our Counselors</a></li>
-              <li><a href="#assessments" className="text-white/80 hover:text-white transition-colors">Assessments</a></li>
-              <li><a href="#resources" className="text-white/80 hover:text-white transition-colors">Resources</a></li>
-              <li><a href="#blog" className="text-white/80 hover:text-white transition-colors">Blog</a></li>
+              <li><button onClick={() => document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' })} className="text-white/80 hover:text-white transition-colors text-left">About Us</button></li>
+              <li><button onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })} className="text-white/80 hover:text-white transition-colors text-left">Our Services</button></li>
+              <li><button onClick={() => document.getElementById('counselors')?.scrollIntoView({ behavior: 'smooth' })} className="text-white/80 hover:text-white transition-colors text-left">Our Counselors</button></li>
+              <li><button onClick={() => document.getElementById('resources')?.scrollIntoView({ behavior: 'smooth' })} className="text-white/80 hover:text-white transition-colors text-left">Resources</button></li>
             </ul>
           </div>
 
@@ -45,11 +45,10 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Services</h4>
             <ul className="space-y-2">
-              <li><a href="#individual" className="text-white/80 hover:text-white transition-colors">Individual Counseling</a></li>
-              <li><a href="#group" className="text-white/80 hover:text-white transition-colors">Group Workshops</a></li>
-              <li><a href="#assessments" className="text-white/80 hover:text-white transition-colors">Career Assessments</a></li>
-              <li><a href="#specialized" className="text-white/80 hover:text-white transition-colors">Specialized Guidance</a></li>
-              <li><a href="#exam-prep" className="text-white/80 hover:text-white transition-colors">Exam Preparation</a></li>
+              <li><button onClick={() => navigate('/auth')} className="text-white/80 hover:text-white transition-colors text-left">Individual Counseling</button></li>
+              <li><button onClick={() => navigate('/auth')} className="text-white/80 hover:text-white transition-colors text-left">Group Workshops</button></li>
+              <li><button onClick={() => navigate('/auth')} className="text-white/80 hover:text-white transition-colors text-left">Career Assessments</button></li>
+              <li><button onClick={() => navigate('/auth')} className="text-white/80 hover:text-white transition-colors text-left">Specialized Guidance</button></li>
             </ul>
           </div>
 
@@ -89,9 +88,7 @@ export const Footer = () => {
               © 2024 Career Craft. All rights reserved.
             </div>
             <div className="flex space-x-6 text-sm">
-              <a href="#privacy" className="text-white/80 hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#terms" className="text-white/80 hover:text-white transition-colors">Terms of Service</a>
-              <a href="#support" className="text-white/80 hover:text-white transition-colors">Support</a>
+              <button onClick={() => navigate('/auth')} className="text-white/80 hover:text-white transition-colors">Contact Support</button>
             </div>
           </div>
         </div>
