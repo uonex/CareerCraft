@@ -13,6 +13,7 @@ import AdminAnalytics from "@/components/admin/AdminAnalytics";
 import AdminFeedback from "@/components/admin/AdminFeedback";
 import AssessmentFileUpload from "@/components/admin/AssessmentFileUpload";
 import { supabase } from "@/integrations/supabase/client";
+import { sanitizeInput } from "@/lib/auth";
 import {
   Dialog,
   DialogContent,
@@ -58,14 +59,43 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check admin authentication
-    const isAuthenticated = localStorage.getItem("admin_authenticated");
-    if (!isAuthenticated) {
-      navigate("/admin");
-      return;
-    }
+    const checkAuthAndRole = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        navigate("/admin/login");
+        return;
+      }
 
-    fetchAssessmentTypes();
+      // Check if user has admin role
+      const { data: roles, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id)
+        .eq('role', 'admin')
+        .single();
+
+      if (error || !roles) {
+        toast.error("Access denied. Admin privileges required.");
+        await supabase.auth.signOut();
+        navigate("/admin/login");
+        return;
+      }
+
+      fetchAssessmentTypes();
+    };
+
+    checkAuthAndRole();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (!session) {
+          navigate("/admin/login");
+        }
+      }
+    );
+
+    return () => subscription.unsubscribe();
   }, [navigate]);
 
   const fetchAssessmentTypes = async () => {
@@ -90,14 +120,31 @@ const AdminDashboard = () => {
     e.preventDefault();
     
     try {
+      // Validate and sanitize inputs
+      const sanitizedName = sanitizeInput(formData.name.trim());
+      const sanitizedDescription = sanitizeInput(formData.description.trim());
+      const sanitizedDuration = sanitizeInput(formData.estimated_duration.trim());
+
+      if (sanitizedName.length < 3) {
+        throw new Error("Assessment name must be at least 3 characters long");
+      }
+
+      if (sanitizedDescription.length < 10) {
+        throw new Error("Description must be at least 10 characters long");
+      }
+
+      if (sanitizedDuration.length < 3) {
+        throw new Error("Duration must be specified");
+      }
+
       if (editingId) {
         // Update existing assessment
         const { error } = await (supabase as any)
           .from("assessment_types")
           .update({
-            name: formData.name,
-            description: formData.description,
-            estimated_duration: formData.estimated_duration
+            name: sanitizedName,
+            description: sanitizedDescription,
+            estimated_duration: sanitizedDuration
           })
           .eq("id", editingId);
 
@@ -108,9 +155,9 @@ const AdminDashboard = () => {
         const { error } = await (supabase as any)
           .from("assessment_types")
           .insert({
-            name: formData.name,
-            description: formData.description,
-            estimated_duration: formData.estimated_duration,
+            name: sanitizedName,
+            description: sanitizedDescription,
+            estimated_duration: sanitizedDuration,
             is_active: true
           });
 
@@ -123,9 +170,9 @@ const AdminDashboard = () => {
       setEditingId(null);
       setDialogOpen(false);
       fetchAssessmentTypes();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error saving assessment:", error);
-      toast.error("Failed to save assessment");
+      toast.error(error.message || "Failed to save assessment");
     }
   };
 
@@ -155,10 +202,15 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("admin_authenticated");
-    toast.success("Logged out successfully");
-    navigate("/admin");
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast.success("Logged out successfully");
+      navigate("/admin/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Error during logout");
+    }
   };
 
   const resetForm = () => {

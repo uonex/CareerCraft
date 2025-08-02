@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Upload, Download, FileText, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { sanitizeInput } from "@/lib/auth";
 import {
   Dialog,
   DialogContent,
@@ -182,13 +183,31 @@ const AssessmentFileUpload = ({ open, onOpenChange, onSuccess }: AssessmentFileU
     setUploading(true);
     
     try {
+      // Validate and sanitize inputs
+      const sanitizedName = sanitizeInput(formData.name.trim());
+      const sanitizedDescription = sanitizeInput(formData.description.trim());
+      const sanitizedDuration = sanitizeInput(formData.estimated_duration.trim());
+
+      if (sanitizedName.length < 3) {
+        throw new Error("Assessment name must be at least 3 characters long");
+      }
+
+      if (sanitizedDescription.length < 10) {
+        throw new Error("Description must be at least 10 characters long");
+      }
+
+      // Validate file size (max 5MB)
+      if (selectedFile.size > 5 * 1024 * 1024) {
+        throw new Error("File size must not exceed 5MB");
+      }
+
       // Create the assessment type
       const { data: assessmentType, error: assessmentError } = await (supabase as any)
         .from("assessment_types")
         .insert({
-          name: formData.name,
-          description: formData.description,
-          estimated_duration: formData.estimated_duration,
+          name: sanitizedName,
+          description: sanitizedDescription,
+          estimated_duration: sanitizedDuration,
           is_active: true,
           content_file_name: selectedFile.name,
           content_uploaded_at: new Date().toISOString()

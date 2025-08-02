@@ -30,6 +30,7 @@ const App = () => (
             <Route path="/:lang/auth" element={<Auth />} />
             <Route path="/:lang/dashboard" element={<Dashboard />} />
             <Route path="/:lang/admin" element={<AdminLogin />} />
+            <Route path="/:lang/admin/login" element={<AdminLogin />} />
             <Route path="/:lang/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/:lang/assessment/:assessmentType" element={<AssessmentTaking />} />
             
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/auth" element={<Navigate to="/en/auth" replace />} />
             <Route path="/dashboard" element={<Navigate to="/en/dashboard" replace />} />
             <Route path="/admin" element={<Navigate to="/en/admin" replace />} />
+            <Route path="/admin/login" element={<Navigate to="/en/admin/login" replace />} />
             <Route path="/admin/dashboard" element={<Navigate to="/en/admin/dashboard" replace />} />
             <Route path="/assessment/:assessmentType" element={<Navigate to="/en/assessment/:assessmentType" replace />} />
             
