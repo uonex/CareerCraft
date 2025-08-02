@@ -90,7 +90,7 @@ const Dashboard = () => {
   const renderActiveSection = () => {
     switch (activeSection) {
       case "home":
-        return <DashboardOverview user={user} />;
+        return <DashboardOverview user={user} onSectionChange={setActiveSection} />;
       case "history":
         return <SessionsSection user={user} />;
       case "notifications":

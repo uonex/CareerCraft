@@ -346,7 +346,7 @@ export const BookingSection = ({ user }: BookingSectionProps) => {
                     </div>
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4" />
-                      <span><strong>Date:</strong> {new Date(bookingData.date).toLocaleDateString()}</span>
+                      <span><strong>Date:</strong> {bookingData.date ? new Date(bookingData.date + 'T00:00:00').toLocaleDateString() : ''}</span>
                     </div>
                   </div>
                   

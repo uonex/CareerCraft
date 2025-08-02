@@ -4,9 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Calendar, FileText, TrendingUp, Plus, Quote } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 interface DashboardOverviewProps {
   user: User;
+  onSectionChange?: (section: string) => void;
 }
 
 interface DashboardStats {
@@ -46,7 +48,8 @@ const dailyQuotes = [
   }
 ];
 
-export const DashboardOverview = ({ user }: DashboardOverviewProps) => {
+export const DashboardOverview = ({ user, onSectionChange }: DashboardOverviewProps) => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState<DashboardStats>({
     upcomingSessions: 0,
     completedAssessments: 0,
@@ -127,7 +130,11 @@ export const DashboardOverview = ({ user }: DashboardOverviewProps) => {
 
       {/* Book Session Button */}
       <div className="text-center">
-        <Button size="lg" className="bg-gradient-primary hover:bg-gradient-primary/90 text-white px-8 py-4 text-lg">
+        <Button 
+          size="lg" 
+          className="bg-gradient-primary hover:bg-gradient-primary/90 text-white px-8 py-4 text-lg"
+          onClick={() => onSectionChange?.('booking')}
+        >
           <Plus className="h-5 w-5 mr-2" />
           Book a Session
         </Button>
@@ -193,7 +200,7 @@ export const DashboardOverview = ({ user }: DashboardOverviewProps) => {
               <p className="text-sm">
                 <strong>Location:</strong> Career Craft Guidance Center
               </p>
-              <Button variant="outline" className="mt-4">
+              <Button variant="outline" className="mt-4" onClick={() => onSectionChange?.('history')}>
                 View Details
               </Button>
             </div>
@@ -209,11 +216,11 @@ export const DashboardOverview = ({ user }: DashboardOverviewProps) => {
           </CardHeader>
           <CardContent>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button className="flex-1">
+              <Button className="flex-1" onClick={() => onSectionChange?.('booking')}>
                 <Plus className="h-4 w-4 mr-2" />
                 Book Your First Session
               </Button>
-              <Button variant="outline" className="flex-1">
+              <Button variant="outline" className="flex-1" onClick={() => onSectionChange?.('assessments')}>
                 Take Career Assessment
               </Button>
             </div>
