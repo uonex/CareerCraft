@@ -82,13 +82,32 @@ export const BookingSection = ({ user }: BookingSectionProps) => {
         throw new Error("Invalid service or counselor selection");
       }
 
+      // Validate date is not in the past
+      const selectedDate = new Date(bookingData.date);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Reset time to start of day
+      
+      if (selectedDate < today) {
+        throw new Error("Please select a future date for your session");
+      }
+
+      // Ensure date is in YYYY-MM-DD format
+      const formattedDate = bookingData.date;
+      
+      console.log("Booking data:", {
+        date: formattedDate,
+        time: bookingData.time,
+        user_id: user.id,
+        counselor_id: bookingData.counselorId
+      });
+
       const { error } = await supabase
         .from("sessions")
         .insert({
           user_id: user.id,
           counselor_id: bookingData.counselorId,
           service_type: selectedService.name,
-          session_date: bookingData.date,
+          session_date: formattedDate,
           session_time: bookingData.time,
           notes: bookingData.notes,
           rate: selectedCounselor.rate_per_session,
@@ -113,6 +132,7 @@ export const BookingSection = ({ user }: BookingSectionProps) => {
       setStep(1);
       
     } catch (error: any) {
+      console.error("Booking error:", error);
       toast.error("Error booking session: " + error.message);
     } finally {
       setBooking(false);
@@ -243,6 +263,7 @@ export const BookingSection = ({ user }: BookingSectionProps) => {
                     value={bookingData.date}
                     onChange={(e) => setBookingData(prev => ({ ...prev, date: e.target.value }))}
                     min={new Date().toISOString().split('T')[0]}
+                    required
                   />
                 </div>
                 
