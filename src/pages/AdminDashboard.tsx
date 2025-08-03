@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Plus, Edit, Trash2, LogOut, Settings, BarChart3, MessageSquare, Upload } from "lucide-react";
+import { Plus, Edit, Trash2, LogOut, Settings, BarChart3, MessageSquare, Upload, Users } from "lucide-react";
 import AdminAnalytics from "@/components/admin/AdminAnalytics";
 import AdminFeedback from "@/components/admin/AdminFeedback";
 import AssessmentFileUpload from "@/components/admin/AssessmentFileUpload";
@@ -247,10 +247,14 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs defaultValue="assessments" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="assessments" className="flex items-center gap-2">
               <Settings className="h-4 w-4" />
               Assessments
+            </TabsTrigger>
+            <TabsTrigger value="counselors" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              Counselors
             </TabsTrigger>
             <TabsTrigger value="analytics" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
@@ -418,6 +422,32 @@ const AdminDashboard = () => {
                     ))}
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="counselors">
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <CardTitle>Counselor Management</CardTitle>
+                    <CardDescription>
+                      Manage counselors and their information
+                    </CardDescription>
+                  </div>
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Counselor
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8 text-muted-foreground">
+                  <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>Counselor management coming soon</p>
+                  <p className="text-sm">This will allow you to add and manage counselors</p>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

@@ -9,6 +9,8 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
+import CounselorLogin from "./pages/CounselorLogin";
+import CounselorDashboard from "./pages/CounselorDashboard";
 import AssessmentTaking from "./pages/AssessmentTaking";
 import NotFound from "./pages/NotFound";
 
@@ -32,6 +34,8 @@ const App = () => (
             <Route path="/:lang/admin" element={<AdminLogin />} />
             <Route path="/:lang/admin/login" element={<AdminLogin />} />
             <Route path="/:lang/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/counselor/login" element={<CounselorLogin />} />
+            <Route path="/counselor/dashboard" element={<CounselorDashboard />} />
             <Route path="/:lang/assessment/:assessmentType" element={<AssessmentTaking />} />
             
             {/* Fallback routes without language prefix - redirect to /en */}

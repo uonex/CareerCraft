@@ -1,49 +1,90 @@
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, Award, Users } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/integrations/supabase/client";
 
-const counselors = [
-  {
-    name: "Dr. Meera Gupta",
-    specialization: "Engineering & Technology Pathways",
-    experience: "15+ years",
-    rating: 4.9,
-    clients: "500+",
-    image: "👩‍🔬",
-    bio: "Specialized in guiding students towards STEM careers with a focus on emerging technologies.",
-    languages: ["English", "हिंदी"],
-    expertise: ["IIT/JEE Preparation", "Engineering Streams", "Tech Careers"]
-  },
-  {
-    name: "Prof. Rajesh Kumar",
-    specialization: "Creative Arts & Design Careers",
-    experience: "12+ years", 
-    rating: 4.8,
-    clients: "350+",
-    image: "👨‍🎨",
-    bio: "Helping creative minds discover opportunities in arts, design, and media industries.",
-    languages: ["English", "हिंदी"],
-    expertise: ["Fine Arts", "Graphic Design", "Media Studies"]
-  },
-  {
-    name: "Dr. Priya Sharma",
-    specialization: "Medical & Healthcare Guidance",
-    experience: "18+ years",
-    rating: 4.9,
-    clients: "600+", 
-    image: "👩‍⚕️",
-    bio: "Expert guidance for medical aspirants including NEET preparation and healthcare careers.",
-    languages: ["English", "हिंदी"],
-    expertise: ["NEET Preparation", "Medical Streams", "Healthcare Careers"]
-  }
-];
+interface Counselor {
+  id: string;
+  name: string;
+  specializations: string[];
+  experience_years: number;
+  rating?: number;
+  total_sessions?: number;
+  photo_url?: string;
+  bio?: string;
+  languages?: string[];
+  is_active: boolean;
+  availability_json?: any;
+  created_at?: string;
+  updated_at?: string;
+  rate_per_session?: number;
+}
 
 export const FeaturedCounselors = () => {
+  const [counselors, setCounselors] = useState<Counselor[]>([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { lang } = useParams<{ lang: string }>();
   const { language, t } = useLanguage();
+
+  useEffect(() => {
+    fetchCounselors();
+  }, []);
+
+  const fetchCounselors = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("counselors")
+        .select("*")
+        .eq("is_active", true)
+        .order("rating", { ascending: false });
+
+      if (error) throw error;
+      setCounselors(data || []);
+    } catch (error) {
+      console.error("Error fetching counselors:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className="py-20 bg-gradient-to-b from-background to-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="animate-pulse text-lg">Loading counselors...</div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (counselors.length === 0) {
+    return (
+      <section className="py-20 bg-gradient-to-b from-background to-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6">
+              {t('counselors.title')}
+              <span className="bg-gradient-primary bg-clip-text text-transparent"> {t('counselors.titleHighlight')}</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
+              {t('counselors.subtitle')}
+            </p>
+            <div className="text-muted-foreground">
+              <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
+              <p>No counselors available at the moment</p>
+              <p className="text-sm">Please check back later</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted/30">
@@ -71,23 +112,35 @@ export const FeaturedCounselors = () => {
               
               <div className="relative z-10">
                 <div className="flex items-start space-x-4 mb-6">
-                  <div className="text-5xl">{counselor.image}</div>
+                  <div className="text-5xl">
+                    {counselor.photo_url ? (
+                      <img 
+                        src={counselor.photo_url} 
+                        alt={counselor.name}
+                        className="w-16 h-16 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-16 h-16 rounded-full bg-gradient-primary/10 flex items-center justify-center text-2xl">
+                        👨‍💼
+                      </div>
+                    )}
+                  </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-foreground mb-1">
                       {counselor.name}
                     </h3>
                     <p className="text-primary font-medium text-sm mb-2">
-                      {counselor.specialization}
+                      {counselor.specializations.join(", ") || "General Counseling"}
                     </p>
                     
                     <div className="flex items-center space-x-4 text-sm text-muted-foreground">
                       <div className="flex items-center space-x-1">
                         <Award className="w-4 h-4" />
-                        <span>{counselor.experience}</span>
+                        <span>{counselor.experience_years}+ years</span>
                       </div>
                       <div className="flex items-center space-x-1">
                         <Users className="w-4 h-4" />
-                        <span>{counselor.clients}</span>
+                        <span>{counselor.total_sessions || 0} sessions</span>
                       </div>
                     </div>
                   </div>
@@ -98,22 +151,24 @@ export const FeaturedCounselors = () => {
                     {[...Array(5)].map((_, i) => (
                       <Star 
                         key={i} 
-                        className={`w-4 h-4 ${i < Math.floor(counselor.rating) ? 'text-yellow-500 fill-current' : 'text-gray-300'}`} 
+                        className={`w-4 h-4 ${i < Math.floor(counselor.rating || 0) ? 'text-yellow-500 fill-current' : 'text-gray-300'}`} 
                       />
                     ))}
                   </div>
                   <span className="text-sm font-semibold text-foreground">
-                    {counselor.rating}
+                    {counselor.rating || 0}
                   </span>
                 </div>
 
-                <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                  {counselor.bio}
-                </p>
+                {counselor.bio && (
+                  <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                    {counselor.bio}
+                  </p>
+                )}
 
                 <div className="flex items-center space-x-2 mb-4">
                   <span className="text-xs font-medium text-muted-foreground">{t('counselors.languages')}:</span>
-                  {counselor.languages.map((lang, langIndex) => (
+                  {(counselor.languages || ['English']).map((lang, langIndex) => (
                     <Badge key={langIndex} variant="secondary" className="text-xs">
                       {lang}
                     </Badge>
@@ -121,7 +176,7 @@ export const FeaturedCounselors = () => {
                 </div>
 
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {counselor.expertise.map((skill, skillIndex) => (
+                  {counselor.specializations.map((skill, skillIndex) => (
                     <Badge 
                       key={skillIndex} 
                       variant="outline" 
