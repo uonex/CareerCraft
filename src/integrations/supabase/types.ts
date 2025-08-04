@@ -245,45 +245,180 @@ export type Database = {
         }
         Relationships: []
       }
+      counselor_availability: {
+        Row: {
+          counselor_id: string | null
+          created_at: string
+          day_of_week: number
+          end_time: string
+          id: string
+          is_available: boolean | null
+          start_time: string
+          updated_at: string
+        }
+        Insert: {
+          counselor_id?: string | null
+          created_at?: string
+          day_of_week: number
+          end_time: string
+          id?: string
+          is_available?: boolean | null
+          start_time: string
+          updated_at?: string
+        }
+        Update: {
+          counselor_id?: string | null
+          created_at?: string
+          day_of_week?: number
+          end_time?: string
+          id?: string
+          is_available?: boolean | null
+          start_time?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "counselor_availability_counselor_id_fkey"
+            columns: ["counselor_id"]
+            isOneToOne: false
+            referencedRelation: "counselors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      counselor_resources: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          external_url: string | null
+          file_url: string | null
+          id: string
+          is_public: boolean | null
+          resource_type: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          external_url?: string | null
+          file_url?: string | null
+          id?: string
+          is_public?: boolean | null
+          resource_type: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          external_url?: string | null
+          file_url?: string | null
+          id?: string
+          is_public?: boolean | null
+          resource_type?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "counselor_resources_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "counselors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      counselor_students: {
+        Row: {
+          assigned_at: string
+          counselor_id: string | null
+          id: string
+          is_active: boolean | null
+          student_id: string | null
+        }
+        Insert: {
+          assigned_at?: string
+          counselor_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          student_id?: string | null
+        }
+        Update: {
+          assigned_at?: string
+          counselor_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          student_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "counselor_students_counselor_id_fkey"
+            columns: ["counselor_id"]
+            isOneToOne: false
+            referencedRelation: "counselors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       counselors: {
         Row: {
           availability_json: Json | null
           bio: string | null
           created_at: string
+          email: string | null
           experience_years: number | null
           id: string
           is_active: boolean | null
+          languages: string[] | null
           name: string
           photo_url: string | null
           rate_per_session: number | null
+          rating: number | null
           specializations: string[] | null
+          total_sessions: number | null
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           availability_json?: Json | null
           bio?: string | null
           created_at?: string
+          email?: string | null
           experience_years?: number | null
           id?: string
           is_active?: boolean | null
+          languages?: string[] | null
           name: string
           photo_url?: string | null
           rate_per_session?: number | null
+          rating?: number | null
           specializations?: string[] | null
+          total_sessions?: number | null
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           availability_json?: Json | null
           bio?: string | null
           created_at?: string
+          email?: string | null
           experience_years?: number | null
           id?: string
           is_active?: boolean | null
+          languages?: string[] | null
           name?: string
           photo_url?: string | null
           rate_per_session?: number | null
+          rating?: number | null
           specializations?: string[] | null
+          total_sessions?: number | null
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -544,7 +679,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user"
+      app_role: "admin" | "moderator" | "user" | "counselor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -672,7 +807,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "moderator", "user"],
+      app_role: ["admin", "moderator", "user", "counselor"],
     },
   },
 } as const
