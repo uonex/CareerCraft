@@ -12,6 +12,7 @@ import { Plus, Edit, Trash2, LogOut, Settings, BarChart3, MessageSquare, Upload,
 import AdminAnalytics from "@/components/admin/AdminAnalytics";
 import AdminFeedback from "@/components/admin/AdminFeedback";
 import AssessmentFileUpload from "@/components/admin/AssessmentFileUpload";
+import { AddCounselorDialog } from "@/components/admin/AddCounselorDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { sanitizeInput } from "@/lib/auth";
 import {
@@ -45,8 +46,21 @@ interface AssessmentType {
   content_uploaded_at?: string;
 }
 
+interface Counselor {
+  id: string;
+  name: string;
+  email?: string;
+  specializations: string[];
+  experience_years: number;
+  rating?: number;
+  total_sessions?: number;
+  is_active: boolean;
+  created_at: string;
+}
+
 const AdminDashboard = () => {
   const [assessments, setAssessments] = useState<AssessmentType[]>([]);
+  const [counselors, setCounselors] = useState<Counselor[]>([]);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
@@ -56,6 +70,7 @@ const AdminDashboard = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [addCounselorDialogOpen, setAddCounselorDialogOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -82,6 +97,7 @@ const AdminDashboard = () => {
       }
 
       fetchAssessmentTypes();
+      fetchCounselors();
     };
 
     checkAuthAndRole();
@@ -113,6 +129,21 @@ const AdminDashboard = () => {
       toast.error("Failed to fetch assessment types");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchCounselors = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("counselors")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      setCounselors(data || []);
+    } catch (error) {
+      console.error("Error fetching counselors:", error);
+      toast.error("Failed to fetch counselors");
     }
   };
 
@@ -436,19 +467,61 @@ const AdminDashboard = () => {
                       Manage counselors and their information
                     </CardDescription>
                   </div>
-                  <Button>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Counselor
-                  </Button>
+                   <Button onClick={() => setAddCounselorDialogOpen(true)}>
+                     <Plus className="h-4 w-4 mr-2" />
+                     Add Counselor
+                   </Button>
                 </div>
               </CardHeader>
-              <CardContent>
-                <div className="text-center py-8 text-muted-foreground">
-                  <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Counselor management coming soon</p>
-                  <p className="text-sm">This will allow you to add and manage counselors</p>
-                </div>
-              </CardContent>
+               <CardContent>
+                 {counselors.length === 0 ? (
+                   <div className="text-center py-8 text-muted-foreground">
+                     <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                     <p>No counselors added yet</p>
+                     <p className="text-sm">Add your first counselor to get started</p>
+                   </div>
+                 ) : (
+                   <div className="space-y-4">
+                     {counselors.map((counselor) => (
+                       <div
+                         key={counselor.id}
+                         className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                       >
+                         <div className="flex-1 space-y-1">
+                           <div className="flex items-center gap-2">
+                             <h3 className="font-medium">{counselor.name}</h3>
+                             <Badge variant={counselor.is_active ? "default" : "secondary"}>
+                               {counselor.is_active ? "Active" : "Inactive"}
+                             </Badge>
+                           </div>
+                           <p className="text-sm text-muted-foreground">
+                             {counselor.email}
+                           </p>
+                           <div className="flex gap-2 text-xs text-muted-foreground">
+                             <span>{counselor.experience_years} years experience</span>
+                             <span>•</span>
+                             <span>{counselor.total_sessions || 0} sessions</span>
+                             <span>•</span>
+                             <span>Rating: {counselor.rating || 0}</span>
+                           </div>
+                           <div className="flex flex-wrap gap-1">
+                             {counselor.specializations.map((spec, index) => (
+                               <Badge key={index} variant="outline" className="text-xs">
+                                 {spec}
+                               </Badge>
+                             ))}
+                           </div>
+                         </div>
+                         <div className="flex gap-2">
+                           <Button variant="outline" size="sm">
+                             <Edit className="h-4 w-4" />
+                           </Button>
+                         </div>
+                       </div>
+                     ))}
+                   </div>
+                 )}
+               </CardContent>
             </Card>
           </TabsContent>
 
@@ -466,6 +539,13 @@ const AdminDashboard = () => {
           open={uploadDialogOpen}
           onOpenChange={setUploadDialogOpen}
           onSuccess={fetchAssessmentTypes}
+        />
+
+        {/* Add Counselor Dialog */}
+        <AddCounselorDialog
+          open={addCounselorDialogOpen}
+          onOpenChange={setAddCounselorDialogOpen}
+          onCounselorAdded={fetchCounselors}
         />
       </div>
     </div>

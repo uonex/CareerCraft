@@ -146,14 +146,24 @@ export const Header = () => {
               </Button>
             </div>
           ) : (
-            <Button 
-              variant="hero" 
-              size="default" 
-              className="hidden sm:inline-flex"
-              onClick={handleBookSession}
-            >
-              {t('header.bookSession')}
-            </Button>
+            <div className="flex items-center space-x-3">
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="hidden sm:inline-flex"
+                onClick={() => navigate('/counselor/auth')}
+              >
+                Counselor Login
+              </Button>
+              <Button 
+                variant="hero" 
+                size="default" 
+                className="hidden sm:inline-flex"
+                onClick={handleBookSession}
+              >
+                {t('header.bookSession')}
+              </Button>
+            </div>
           )}
 
           {/* Mobile menu button */}
