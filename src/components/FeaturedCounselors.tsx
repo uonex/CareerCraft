@@ -32,6 +32,21 @@ export const FeaturedCounselors = () => {
 
   useEffect(() => {
     fetchCounselors();
+    
+    // Set up real-time subscription for counselors updates
+    const channel = supabase
+      .channel('counselors')
+      .on('postgres_changes', 
+        { event: '*', schema: 'public', table: 'counselors' }, 
+        () => {
+          fetchCounselors();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const fetchCounselors = async () => {

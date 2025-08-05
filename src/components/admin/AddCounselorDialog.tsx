@@ -47,6 +47,9 @@ export const AddCounselorDialog = ({ open, onOpenChange, onCounselorAdded }: Add
       if (formData.password.length < 6) throw new Error("Password must be at least 6 characters");
       if (parseInt(formData.experience_years) < 0) throw new Error("Experience years cannot be negative");
 
+      // Check if user already exists
+      const { data: existingUser } = await supabase.auth.getUser();
+      
       // Create user account for counselor
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: sanitizedEmail,
@@ -56,38 +59,88 @@ export const AddCounselorDialog = ({ open, onOpenChange, onCounselorAdded }: Add
         }
       });
 
-      if (authError) throw authError;
-      if (!authData.user) throw new Error("Failed to create user account");
+      // Handle case where user already exists
+      if (authError && authError.message === "User already registered") {
+        // Get the existing user ID by email (admin has access to this)
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('user_id')
+          .eq('email', sanitizedEmail)
+          .single();
+        
+        if (!profiles) {
+          throw new Error("User with this email already exists but profile not found");
+        }
 
-      // Add counselor role
-      const { error: roleError } = await supabase
-        .from('user_roles')
-        .insert({
-          user_id: authData.user.id,
-          role: 'counselor'
-        });
+        // Use existing user's ID
+        const userId = profiles.user_id;
 
-      if (roleError) throw roleError;
+        // Add counselor role to existing user
+        const { error: roleError } = await supabase
+          .from('user_roles')
+          .insert({
+            user_id: userId,
+            role: 'counselor'
+          });
 
-      // Create counselor profile
-      const { error: counselorError } = await supabase
-        .from('counselors')
-        .insert({
-          user_id: authData.user.id,
-          name: sanitizedName,
-          email: sanitizedEmail,
-          bio: sanitizedBio,
-          experience_years: parseInt(formData.experience_years) || 0,
-          rate_per_session: parseFloat(formData.rate_per_session) || 0,
-          photo_url: formData.photo_url || null,
-          specializations: specializations,
-          languages: languages,
-          is_active: true,
-          rating: 0,
-          total_sessions: 0
-        });
+        if (roleError && !roleError.message.includes('duplicate')) {
+          throw roleError;
+        }
 
-      if (counselorError) throw counselorError;
+        // Create counselor profile
+        const { error: counselorError } = await supabase
+          .from('counselors')
+          .insert({
+            user_id: userId,
+            name: sanitizedName,
+            email: sanitizedEmail,
+            bio: sanitizedBio,
+            experience_years: parseInt(formData.experience_years) || 0,
+            rate_per_session: parseFloat(formData.rate_per_session) || 0,
+            photo_url: formData.photo_url || null,
+            specializations: specializations,
+            languages: languages,
+            is_active: true,
+            rating: 0,
+            total_sessions: 0
+          });
+
+        if (counselorError) throw counselorError;
+      } else {
+        // Handle other auth errors
+        if (authError) throw authError;
+        if (!authData.user) throw new Error("Failed to create user account");
+
+        // Add counselor role to new user
+        const { error: roleError } = await supabase
+          .from('user_roles')
+          .insert({
+            user_id: authData.user.id,
+            role: 'counselor'
+          });
+
+        if (roleError) throw roleError;
+
+        // Create counselor profile
+        const { error: counselorError } = await supabase
+          .from('counselors')
+          .insert({
+            user_id: authData.user.id,
+            name: sanitizedName,
+            email: sanitizedEmail,
+            bio: sanitizedBio,
+            experience_years: parseInt(formData.experience_years) || 0,
+            rate_per_session: parseFloat(formData.rate_per_session) || 0,
+            photo_url: formData.photo_url || null,
+            specializations: specializations,
+            languages: languages,
+            is_active: true,
+            rating: 0,
+            total_sessions: 0
+          });
+
+        if (counselorError) throw counselorError;
+      }
 
       toast.success("Counselor added successfully");
       resetForm();
