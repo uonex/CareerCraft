@@ -36,8 +36,9 @@ const App = () => (
             <Route path="/:lang/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/:lang/counselor/auth" element={<CounselorAuth />} />
             <Route path="/:lang/counselor/dashboard" element={<CounselorDashboard />} />
-            <Route path="/counselor/auth" element={<CounselorAuth />} />
-            <Route path="/counselor/dashboard" element={<CounselorDashboard />} />
+          <Route path="/counselor/auth" element={<CounselorAuth />} />
+          <Route path="/counselor/login" element={<CounselorAuth />} />
+          <Route path="/counselor/dashboard" element={<CounselorDashboard />} />
             <Route path="/:lang/assessment/:assessmentType" element={<AssessmentTaking />} />
             
             {/* Fallback routes without language prefix - redirect to /en */}
