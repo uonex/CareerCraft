@@ -233,6 +233,38 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDeleteCounselor = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("counselors")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+      toast.success("Counselor deleted successfully");
+      fetchCounselors();
+    } catch (error) {
+      console.error("Error deleting counselor:", error);
+      toast.error("Failed to delete counselor");
+    }
+  };
+
+  const handleToggleCounselorStatus = async (id: string, currentStatus: boolean) => {
+    try {
+      const { error } = await supabase
+        .from("counselors")
+        .update({ is_active: !currentStatus })
+        .eq("id", id);
+
+      if (error) throw error;
+      toast.success(`Counselor ${!currentStatus ? 'activated' : 'deactivated'} successfully`);
+      fetchCounselors();
+    } catch (error) {
+      console.error("Error updating counselor status:", error);
+      toast.error("Failed to update counselor status");
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
@@ -512,11 +544,40 @@ const AdminDashboard = () => {
                              ))}
                            </div>
                          </div>
-                         <div className="flex gap-2">
-                           <Button variant="outline" size="sm">
-                             <Edit className="h-4 w-4" />
-                           </Button>
-                         </div>
+                          <div className="flex gap-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => handleToggleCounselorStatus(counselor.id, counselor.is_active)}
+                            >
+                              {counselor.is_active ? "Deactivate" : "Activate"}
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button variant="outline" size="sm">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Delete Counselor</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Are you sure you want to delete "{counselor.name}"? 
+                                    This action cannot be undone and will affect all related sessions and data.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() => handleDeleteCounselor(counselor.id)}
+                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                  >
+                                    Delete
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
                        </div>
                      ))}
                    </div>
